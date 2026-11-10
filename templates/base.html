@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Doce Arte Cupcakes</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#e8548c">
+<link rel="apple-touch-icon" href="/static/icon-192.png">
+<script>if ("serviceWorker" in navigator) { navigator.serviceWorker.register("/sw.js"); }</script>
+</head>
+<body>
+<header class="topo">
+  <a class="logo" href="{{ url_for('home') }}">🧁 Doce Arte</a>
+  <nav>
+    <a href="{{ url_for('home') }}">Cardápio</a>
+    <a href="{{ url_for('carrinho') }}">🛒 Carrinho ({{ qtd_carrinho }})</a>
+    {% if usuario %}
+      <a href="{{ url_for('conta') }}">Olá, {{ usuario }}</a>
+      <a href="{{ url_for('sair') }}">Sair</a>
+    {% else %}
+      <a href="{{ url_for('login') }}">Entrar</a>
+      <a class="btn" href="{{ url_for('cadastro') }}">Criar conta</a>
+    {% endif %}
+  </nav>
+</header>
+{% with msgs = get_flashed_messages() %}{% if msgs %}<div class="aviso">{{ msgs[0] }}</div>{% endif %}{% endwith %}
+<main>{% block conteudo %}{% endblock %}</main>
+<footer>
+  <p>Doce Arte Cupcakes · feitos com carinho</p>
+  <p><a href="https://wa.me/{{ whats }}" target="_blank">WhatsApp</a> ·
+     <a href="https://instagram.com/{{ insta }}" target="_blank">@{{ insta }}</a></p>
+</footer>
+<a class="zap" href="https://wa.me/{{ whats }}" target="_blank" aria-label="WhatsApp">💬</a>
+<script>
+// Coloca o "olhinho" (mostrar/ocultar) em TODOS os campos de senha do site
+(function () {
+  var olho = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+  var riscado = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
+  document.querySelectorAll('input[type="password"]').forEach(function (campo) {
+    var caixa = document.createElement('span');
+    caixa.className = 'senha-wrap';
+    campo.parentNode.insertBefore(caixa, campo);
+    caixa.appendChild(campo);
+    var botao = document.createElement('button');
+    botao.type = 'button';
+    botao.className = 'olho';
+    botao.setAttribute('aria-label', 'Mostrar senha');
+    botao.innerHTML = olho;
+    botao.addEventListener('click', function () {
+      var mostrar = campo.type === 'password';
+      campo.type = mostrar ? 'text' : 'password';
+      botao.innerHTML = mostrar ? riscado : olho;
+      botao.setAttribute('aria-label', mostrar ? 'Ocultar senha' : 'Mostrar senha');
+    });
+    caixa.appendChild(botao);
+  });
+})();
+</script>
+</body>
+</html>

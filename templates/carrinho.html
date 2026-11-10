@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block conteudo %}
+<h1>Seu carrinho</h1>
+{% if itens %}
+<div class="caixa">
+  {% for i in itens %}
+  <div class="linha">
+    <span>{{ i.qtd }}x {{ i.nome }}</span>
+    <span>R$ {{ '%.2f'|format(i.sub) }}</span>
+    <form method="post" action="{{ url_for('remover', pid=i.id) }}"><button class="mini">−</button></form>
+  </div>
+  {% endfor %}
+  <p class="total">Total: R$ {{ '%.2f'|format(total) }}</p>
+</div>
+
+{% if usuario %}
+<form class="caixa" method="post" action="{{ url_for('finalizar') }}">
+  <label>Forma de pagamento
+    <select name="pagamento" required>
+      <option>Pix</option><option>Dinheiro</option><option>Cartão na entrega</option>
+    </select></label>
+  <label>Endereço de entrega
+    <input name="endereco" required value="{{ (perfil.rua ~ ', ' ~ perfil.bairro) if perfil.rua else '' }}"></label>
+  <button class="btn">Enviar pedido pelo WhatsApp</button>
+</form>
+{% else %}
+<div class="caixa">
+  <p><strong>Para finalizar o pedido, você precisa entrar na sua conta.</strong></p>
+  <p>Seus itens continuam no carrinho.</p>
+  <a class="btn" href="{{ url_for('login') }}">Entrar</a>
+  <p>Ainda não tem conta? <a href="{{ url_for('cadastro') }}">Criar conta</a></p>
+</div>
+{% endif %}
+
+{% else %}
+<p>Seu carrinho está vazio. <a href="{{ url_for('home') }}">Ver cardápio</a></p>
+{% endif %}
+{% endblock %}

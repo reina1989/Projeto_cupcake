@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block conteudo %}
+<form class="caixa estreita" method="post">
+  <h1>Esqueci minha senha</h1>
+  <p>Digite o e-mail da sua conta. Vamos enviar um link para você criar uma nova senha.</p>
+  <label>E-mail <input type="email" name="email" required></label>
+  <button class="btn">Enviar link</button>
+  <p><a href="{{ url_for('login') }}">Voltar para o login</a></p>
+</form>
+{% endblock %}

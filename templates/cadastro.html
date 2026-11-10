@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block conteudo %}
+<form class="caixa estreita" method="post">
+  <h1>Criar conta</h1>
+  <label>Nome <input name="nome" required></label>
+  <label>E-mail <input type="email" name="email" required></label>
+  <label>Senha (mínimo 6 caracteres) <input type="password" name="senha" minlength="6" required></label>
+  <label>Telefone <input name="telefone" required></label>
+  <label>Rua <input name="rua" required></label>
+  <label>Num <input name="numero" required></label>
+  <label>complemento <input name="complemento" required></label>
+  <label>Bairro <input name="bairro" required></label>
+  <button class="btn">Cadastrar</button>
+</form>
+{% endblock %}

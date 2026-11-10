@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block conteudo %}
+<form class="caixa estreita" method="post" id="form-senha">
+  <h1>Criar nova senha</h1>
+  <input type="hidden" name="token" id="token" value="{{ token or '' }}">
+  <label>Nova senha (mínimo 6 caracteres)
+    <input type="password" name="senha" id="senha" minlength="6" required></label>
+  <label>Repita a nova senha
+    <input type="password" name="senha2" id="senha2" minlength="6" required></label>
+  <button class="btn">Salvar nova senha</button>
+</form>
+
+<div class="caixa estreita" id="link-invalido" style="display:none">
+  <h1>Link inválido ou vencido</h1>
+  <p>Peça um novo link para criar sua senha.</p>
+  <a class="btn" href="{{ url_for('esqueci_senha') }}">Pedir novo link</a>
+</div>
+
+<script>
+// O Supabase coloca a "chave" temporária depois do # no endereço.
+// Aqui pegamos essa chave e a enviamos escondida junto com a nova senha.
+const params = new URLSearchParams(window.location.hash.slice(1));
+const token = params.get("access_token");
+if (document.getElementById("token").value) {
+  // já veio do servidor (tentativa repetida), não precisa fazer nada
+} else if (token && params.get("type") === "recovery") {
+  document.getElementById("token").value = token;
+  history.replaceState(null, "", window.location.pathname); // esconde a chave da barra de endereço
+} else {
+  document.getElementById("form-senha").style.display = "none";
+  document.getElementById("link-invalido").style.display = "grid";
+}
+document.getElementById("form-senha").addEventListener("submit", function (e) {
+  if (document.getElementById("senha").value !== document.getElementById("senha2").value) {
+    e.preventDefault();
+    alert("As senhas não são iguais.");
+  }
+});
+</script>
+{% endblock %}

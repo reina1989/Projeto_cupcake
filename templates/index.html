@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block conteudo %}
+<section class="hero">
+  <h1>Cupcakes que adoçam o seu dia</h1>
+  <p>Escolha seus sabores, monte o carrinho e peça pelo WhatsApp.</p>
+</section>
+<section class="grade">
+  {% for p in produtos %}
+  <article class="card">
+    <div class="foto">
+      {% if p.imagem %}<img src="{{ p.imagem }}" alt="{{ p.nome }}">{% else %}🧁{% endif %}
+    </div>
+    <h3>{{ p.nome }}</h3>
+    <p class="desc">{{ p.descricao or '' }}</p>
+    <p class="preco">R$ {{ '%.2f'|format(p.preco|float) }}</p>
+    <form method="post" action="{{ url_for('add', pid=p.id) }}">
+      <button class="btn">Adicionar</button>
+    </form>
+  </article>
+  {% else %}
+  <p>Nenhum produto cadastrado ainda.</p>
+  {% endfor %}
+</section>
+{% endblock %}
