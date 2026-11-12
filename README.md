@@ -35,13 +35,28 @@ Feito com **Python (Flask)** e **Supabase** (banco de dados e login).
 
 ## 📁 Estrutura do projeto
 
+O código segue o padrão **MVC** (Model, View, Controller). Veja a explicação completa em [`docs/arquitetura-mvc.md`](docs/arquitetura-mvc.md).
+
 ```
 .
-├── app.py                  # Código principal do site (rotas e regras)
-├── requirements.txt        # Bibliotecas Python necessárias
+├── app.py                  # Ponto de entrada: cria o site e liga as rotas
+├── configuracao.py         # Lê as chaves do .env
+├── requirements.txt        # Bibliotecas do site
+├── requirements-dev.txt    # Biblioteca de testes (pytest)
 ├── supabase.sql            # Cria as tabelas no Supabase
+├── pytest.ini              # Configuração dos testes
 ├── .gitignore              # Arquivos que não vão para o GitHub (.env etc.)
-├── templates/              # Páginas HTML
+├── models/                 # MODEL: regras e dados (Supabase)
+│   ├── banco.py            # Conexão com o Supabase
+│   ├── carrinho.py         # Regras do carrinho
+│   ├── produto.py          # Produtos e fotos dos sabores
+│   ├── pedido.py           # Mensagem do WhatsApp e gravação do pedido
+│   └── usuario.py          # Cadastro, login, nova senha e exclusão de conta
+├── controllers/            # CONTROLLER: recebe o pedido e escolhe a resposta
+│   ├── loja_controller.py  # Cardápio, carrinho e finalizar pedido
+│   ├── conta_controller.py # Cadastro, login, nova senha, minha conta
+│   └── pwa_controller.py   # Arquivos do app instalável
+├── templates/              # VIEW: páginas HTML
 │   ├── base.html           # Modelo base (menu, rodapé, olhinho da senha)
 │   ├── index.html          # Cardápio
 │   ├── carrinho.html       # Carrinho e finalização do pedido
@@ -50,17 +65,23 @@ Feito com **Python (Flask)** e **Supabase** (banco de dados e login).
 │   ├── esqueci_senha.html  # Pedir link de nova senha
 │   ├── redefinir.html      # Criar a nova senha
 │   └── conta.html          # Minha conta e exclusão de conta
-└── static/                 # Arquivos públicos
-    ├── style.css           # Visual do site
-    ├── manifest.json       # Configuração do app instalável
-    ├── sw.js               # Service worker (PWA)
-    ├── icon-192.png        # Ícone do app
-    ├── icon-512.png        # Ícone do app
-    └── img/                # Fotos dos sabores
-        ├── baunilha.jpg
-        ├── chocolate.jpg
-        ├── morango.jpg
-        └── ninho.jpg
+├── static/                 # VIEW: arquivos públicos
+│   ├── style.css           # Visual do site
+│   ├── manifest.json       # Configuração do app instalável
+│   ├── sw.js               # Service worker (PWA)
+│   ├── icon-192.png        # Ícone do app
+│   ├── icon-512.png        # Ícone do app
+│   └── img/                # Fotos dos sabores (baunilha, chocolate, morango, ninho)
+├── tests/                  # Testes automáticos
+│   ├── ajudantes.py        # Banco de mentira usado nos testes
+│   ├── test_carrinho.py
+│   ├── test_pedido.py
+│   ├── test_produto.py
+│   ├── test_usuario.py
+│   └── test_rotas.py
+└── docs/
+    ├── arquitetura-mvc.md        # Como o código está organizado
+    └── testes-automatizados.md   # Lista dos testes e resultado
 ```
 
 ---
@@ -88,6 +109,8 @@ APP_URL=https://seu-site.onrender.com
 | `WHATSAPP` | Número que recebe os pedidos, com país e DDD (ex.: `5535999999999`) |
 | `INSTAGRAM` | Nome do perfil, sem o `@` |
 | `APP_URL` | Endereço público do site. Usado no link de "esqueci minha senha". Pode ficar de fora nos testes no computador |
+
+> ⚠️ **Nunca envie o `.env` para o GitHub.** A chave `SUPABASE_SERVICE_KEY` dá acesso total ao projeto. O arquivo `.gitignore` já ignora o `.env`.
 
 ---
 
@@ -193,6 +216,21 @@ Mande o endereço do site pelo WhatsApp ou Instagram junto com o passo a passo a
 
 ---
 
+## ✅ Testes automáticos
+
+O projeto tem **75 testes automáticos** que conferem carrinho, pedidos, fotos, login, cadastro, nova senha, exclusão de conta e as páginas do site. Eles não acessam o Supabase de verdade (usam um banco de mentira), então rodam em menos de 1 segundo.
+
+```bash
+pip install -r requirements-dev.txt   # instala o pytest (uma vez só)
+pytest                                # roda todos os testes
+```
+
+Sem instalar nada, também funciona: `python -m unittest discover -s tests -t . -v`
+
+A lista completa dos testes está em [`docs/testes-automatizados.md`](docs/testes-automatizados.md).
+
+---
+
 ## 🧭 Rotas do site
 
 | Rota | O que faz |
@@ -212,7 +250,7 @@ Mande o endereço do site pelo WhatsApp ou Instagram junto com o passo a passo a
 ## 🍰 Como adicionar ou mudar sabores
 
 - **Novo sabor:** cadastre na tabela `produtos` do Supabase (**Table Editor**), com nome, descrição e preço.
-- **Foto do sabor:** o site procura na pasta `static` um arquivo com o nome do sabor (ex.: `ninho.jpg`). Para um sabor novo, coloque a foto em `static/img/` e inclua a palavra do sabor na lista `SABORES` do `app.py`. Outra opção é preencher a coluna `imagem_url` do produto com o link de uma imagem.
+- **Foto do sabor:** o site procura na pasta `static` um arquivo com o nome do sabor (ex.: `ninho.jpg`). Para um sabor novo, coloque a foto em `static/img/` e inclua a palavra do sabor na lista `SABORES` do arquivo `models/produto.py`. Outra opção é preencher a coluna `imagem_url` do produto com o link de uma imagem.
 - **Preço ou descrição:** edite direto no Supabase, sem mexer no código.
 
 ---
@@ -229,7 +267,7 @@ Mande o endereço do site pelo WhatsApp ou Instagram junto com o passo a passo a
 ## 📝 Observações
 
 - O pedido não tem pagamento online: o cliente escolhe a forma de pagamento e combina o restante pelo WhatsApp.
-- O app instalável (PWA) precisa de endereço seguro (`https`), que o Render já fornece. Veja como instalar na seção [Instalando no celular como app].
+- O app instalável (PWA) precisa de endereço seguro (`https`), que o Render já fornece. Veja como instalar na seção [Instalando no celular como app](#-instalando-no-celular-como-app).
 
 ---
 
