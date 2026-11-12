@@ -89,8 +89,6 @@ APP_URL=https://seu-site.onrender.com
 | `INSTAGRAM` | Nome do perfil, sem o `@` |
 | `APP_URL` | Endereço público do site. Usado no link de "esqueci minha senha". Pode ficar de fora nos testes no computador |
 
-> ⚠️ **Nunca envie o `.env` para o GitHub.** A chave `SUPABASE_SERVICE_KEY` dá acesso total ao projeto. O arquivo `.gitignore` já ignora o `.env`.
-
 ---
 
 ## 🗄️ Configurando o Supabase
