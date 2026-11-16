@@ -271,4 +271,8 @@ A lista completa dos testes está em [`docs/testes-automatizados.md`](docs/teste
 
 ---
 
+📄 Confira o nosso [Laudo de Testes](docs/laudo-de-testes.pdf).
+
+---
+
 Feito com carinho para a **Doce Arte Cupcakes** 💗
