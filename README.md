@@ -6,6 +6,11 @@ Feito com **Python (Flask)** e **Supabase** (banco de dados e login).
 
 ---
 
+🔗 **Acesse o site online:** [Doce Arte Cupcakes](https://doce-arte-cupcakes.onrender.com)
+
+
+---
+
 ## ✨ Funcionalidades
 
 - **Cardápio** com foto, descrição e preço de cada sabor (baunilha, chocolate, morango e ninho)
