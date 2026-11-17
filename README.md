@@ -11,6 +11,16 @@ Feito com **Python (Flask)** e **Supabase** (banco de dados e login).
 
 ---
 
+
+## 🎥 Demonstração em Vídeo
+
+Confira a apresentação completa do sistema **Doce Arte Cupcakes**, incluindo o funcionamento do site, a organização do código em padrão MVC, o banco de dados no Supabase:
+
+🔗 **Assista no YouTube:** [Projeto Integrador de Software II - Doce Arte Cupcakes](https://youtu.be/GUSPncVkn0U)
+
+
+---
+
 ## ✨ Funcionalidades
 
 - **Cardápio** com foto, descrição e preço de cada sabor (baunilha, chocolate, morango e ninho)
